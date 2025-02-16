@@ -1,0 +1,6 @@
+# STM32典型忽略规则
+*.elf
+*.bin
+*.map
+build/
+.mxproject

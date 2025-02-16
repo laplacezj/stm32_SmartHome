@@ -209,8 +209,15 @@ $(BUILD_DIR):
 #######################################
 # clean up
 #######################################
+#clean:
+#-rm -fR $(BUILD_DIR)
 clean:
-	-rm -fR $(BUILD_DIR)
+	@echo Cleaning build directory...
+	@if exist build ( \
+		rd /s /q build >nul 2>&1 && echo Build directory removed. \
+	) || ( \
+		echo Build directory does not exist. \
+	)
   
 #######################################
 # dependencies
@@ -220,7 +227,7 @@ clean:
 # *** EOF ***
 
 
-#????
+#??
 flash:
 	openocd -f interface/stlink.cfg -f target/stm32f1x.cfg -c "program $(BUILD_DIR)/$(TARGET).elf reset exit" 
 
