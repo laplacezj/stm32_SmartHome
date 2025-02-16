@@ -1,0 +1,362 @@
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"freertos.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.StartDefaultTask,"ax",%progbits
+  18              		.align	1
+  19              		.global	StartDefaultTask
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	StartDefaultTask:
+  25              	.LFB70:
+  26              		.file 1 "Core/Src/freertos.c"
+   1:Core/Src/freertos.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/freertos.c **** /**
+   3:Core/Src/freertos.c ****   ******************************************************************************
+   4:Core/Src/freertos.c ****   * File Name          : freertos.c
+   5:Core/Src/freertos.c ****   * Description        : Code for freertos applications
+   6:Core/Src/freertos.c ****   ******************************************************************************
+   7:Core/Src/freertos.c ****   * @attention
+   8:Core/Src/freertos.c ****   *
+   9:Core/Src/freertos.c ****   * Copyright (c) 2025 STMicroelectronics.
+  10:Core/Src/freertos.c ****   * All rights reserved.
+  11:Core/Src/freertos.c ****   *
+  12:Core/Src/freertos.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/freertos.c ****   * in the root directory of this software component.
+  14:Core/Src/freertos.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/freertos.c ****   *
+  16:Core/Src/freertos.c ****   ******************************************************************************
+  17:Core/Src/freertos.c ****   */
+  18:Core/Src/freertos.c **** /* USER CODE END Header */
+  19:Core/Src/freertos.c **** 
+  20:Core/Src/freertos.c **** /* Includes ------------------------------------------------------------------*/
+  21:Core/Src/freertos.c **** #include "FreeRTOS.h"
+  22:Core/Src/freertos.c **** #include "task.h"
+  23:Core/Src/freertos.c **** #include "main.h"
+  24:Core/Src/freertos.c **** #include "cmsis_os.h"
+  25:Core/Src/freertos.c **** 
+  26:Core/Src/freertos.c **** /* Private includes ----------------------------------------------------------*/
+  27:Core/Src/freertos.c **** /* USER CODE BEGIN Includes */
+  28:Core/Src/freertos.c **** #include "driver_led.h"
+  29:Core/Src/freertos.c **** #include "driver_oled.h"
+  30:Core/Src/freertos.c **** #include "driver_timer.h"
+  31:Core/Src/freertos.c **** /* USER CODE END Includes */
+  32:Core/Src/freertos.c **** 
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s 			page 2
+
+
+  33:Core/Src/freertos.c **** /* Private typedef -----------------------------------------------------------*/
+  34:Core/Src/freertos.c **** /* USER CODE BEGIN PTD */
+  35:Core/Src/freertos.c **** 
+  36:Core/Src/freertos.c **** /* USER CODE END PTD */
+  37:Core/Src/freertos.c **** 
+  38:Core/Src/freertos.c **** /* Private define ------------------------------------------------------------*/
+  39:Core/Src/freertos.c **** /* USER CODE BEGIN PD */
+  40:Core/Src/freertos.c **** 
+  41:Core/Src/freertos.c **** /* USER CODE END PD */
+  42:Core/Src/freertos.c **** 
+  43:Core/Src/freertos.c **** /* Private macro -------------------------------------------------------------*/
+  44:Core/Src/freertos.c **** /* USER CODE BEGIN PM */
+  45:Core/Src/freertos.c **** 
+  46:Core/Src/freertos.c **** /* USER CODE END PM */
+  47:Core/Src/freertos.c **** 
+  48:Core/Src/freertos.c **** /* Private variables ---------------------------------------------------------*/
+  49:Core/Src/freertos.c **** /* USER CODE BEGIN Variables */
+  50:Core/Src/freertos.c **** 
+  51:Core/Src/freertos.c **** 
+  52:Core/Src/freertos.c **** /* USER CODE END Variables */
+  53:Core/Src/freertos.c **** /* Definitions for defaultTask */
+  54:Core/Src/freertos.c **** osThreadId_t defaultTaskHandle;
+  55:Core/Src/freertos.c **** const osThreadAttr_t defaultTask_attributes = {
+  56:Core/Src/freertos.c ****   .name = "defaultTask",
+  57:Core/Src/freertos.c ****   .stack_size = 128 * 4,
+  58:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityNormal,
+  59:Core/Src/freertos.c **** };
+  60:Core/Src/freertos.c **** 
+  61:Core/Src/freertos.c **** /* Private function prototypes -----------------------------------------------*/
+  62:Core/Src/freertos.c **** /* USER CODE BEGIN FunctionPrototypes */
+  63:Core/Src/freertos.c **** 
+  64:Core/Src/freertos.c **** /* USER CODE END FunctionPrototypes */
+  65:Core/Src/freertos.c **** 
+  66:Core/Src/freertos.c **** void StartDefaultTask(void *argument);
+  67:Core/Src/freertos.c **** 
+  68:Core/Src/freertos.c **** void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
+  69:Core/Src/freertos.c **** 
+  70:Core/Src/freertos.c **** /**
+  71:Core/Src/freertos.c ****   * @brief  FreeRTOS initialization
+  72:Core/Src/freertos.c ****   * @param  None
+  73:Core/Src/freertos.c ****   * @retval None
+  74:Core/Src/freertos.c ****   */
+  75:Core/Src/freertos.c **** void MX_FREERTOS_Init(void) {
+  76:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
+  77:Core/Src/freertos.c ****   	BaseType_t xLedTask;
+  78:Core/Src/freertos.c **** 	BaseType_t xOledTask;
+  79:Core/Src/freertos.c **** 	TaskHandle_t xLedTaskHandle;
+  80:Core/Src/freertos.c **** 	TaskHandle_t xOledTaskHandle;
+  81:Core/Src/freertos.c **** 	OLED_Init();
+  82:Core/Src/freertos.c **** 	OLED_Clear();
+  83:Core/Src/freertos.c ****   /* USER CODE END Init */
+  84:Core/Src/freertos.c **** 
+  85:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_MUTEX */
+  86:Core/Src/freertos.c ****   /* add mutexes, ... */
+  87:Core/Src/freertos.c ****   /* USER CODE END RTOS_MUTEX */
+  88:Core/Src/freertos.c **** 
+  89:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_SEMAPHORES */
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s 			page 3
+
+
+  90:Core/Src/freertos.c ****   /* add semaphores, ... */
+  91:Core/Src/freertos.c ****   /* USER CODE END RTOS_SEMAPHORES */
+  92:Core/Src/freertos.c **** 
+  93:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_TIMERS */
+  94:Core/Src/freertos.c ****   /* start timers, add new ones, ... */
+  95:Core/Src/freertos.c ****   /* USER CODE END RTOS_TIMERS */
+  96:Core/Src/freertos.c **** 
+  97:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_QUEUES */
+  98:Core/Src/freertos.c ****   /* add queues, ... */
+  99:Core/Src/freertos.c ****   /* USER CODE END RTOS_QUEUES */
+ 100:Core/Src/freertos.c **** 
+ 101:Core/Src/freertos.c ****   /* Create the thread(s) */
+ 102:Core/Src/freertos.c ****   /* creation of defaultTask */
+ 103:Core/Src/freertos.c ****   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+ 104:Core/Src/freertos.c **** 
+ 105:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_THREADS */
+ 106:Core/Src/freertos.c **** 	/* add threads, ... */
+ 107:Core/Src/freertos.c **** 	xLedTask = xTaskCreate(Led_Test, "LedTask", 128, NULL, 1, &xLedTaskHandle);
+ 108:Core/Src/freertos.c **** 	xOledTask = xTaskCreate(OLED_Test, "OledTask", 128, NULL, 1, &xOledTaskHandle);
+ 109:Core/Src/freertos.c ****   /* USER CODE END RTOS_THREADS */
+ 110:Core/Src/freertos.c **** 
+ 111:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_EVENTS */
+ 112:Core/Src/freertos.c ****   /* add events, ... */
+ 113:Core/Src/freertos.c ****   /* USER CODE END RTOS_EVENTS */
+ 114:Core/Src/freertos.c **** 
+ 115:Core/Src/freertos.c **** }
+ 116:Core/Src/freertos.c **** 
+ 117:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartDefaultTask */
+ 118:Core/Src/freertos.c **** /**
+ 119:Core/Src/freertos.c ****   * @brief  Function implementing the defaultTask thread.
+ 120:Core/Src/freertos.c ****   * @param  argument: Not used
+ 121:Core/Src/freertos.c ****   * @retval None
+ 122:Core/Src/freertos.c ****   */
+ 123:Core/Src/freertos.c **** /* USER CODE END Header_StartDefaultTask */
+ 124:Core/Src/freertos.c **** void StartDefaultTask(void *argument)
+ 125:Core/Src/freertos.c **** {
+  27              		.loc 1 125 1 view -0
+  28              		.cfi_startproc
+  29              		@ Volatile: function does not return.
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              	.LVL0:
+  33              		.loc 1 125 1 is_stmt 0 view .LVU1
+  34 0000 08B5     		push	{r3, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 3, -8
+  38              		.cfi_offset 14, -4
+  39              	.LVL1:
+  40              	.L2:
+ 126:Core/Src/freertos.c ****   /* USER CODE BEGIN StartDefaultTask */
+ 127:Core/Src/freertos.c ****   /* Infinite loop */
+ 128:Core/Src/freertos.c ****   for(;;)
+  41              		.loc 1 128 3 is_stmt 1 discriminator 1 view .LVU2
+ 129:Core/Src/freertos.c ****   {
+ 130:Core/Src/freertos.c ****     osDelay(1);
+  42              		.loc 1 130 5 discriminator 1 view .LVU3
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s 			page 4
+
+
+  43 0002 0120     		movs	r0, #1
+  44 0004 FFF7FEFF 		bl	osDelay
+  45              	.LVL2:
+ 128:Core/Src/freertos.c ****   {
+  46              		.loc 1 128 8 discriminator 1 view .LVU4
+  47 0008 FBE7     		b	.L2
+  48              		.cfi_endproc
+  49              	.LFE70:
+  51              		.section	.rodata.MX_FREERTOS_Init.str1.4,"aMS",%progbits,1
+  52              		.align	2
+  53              	.LC0:
+  54 0000 4C656454 		.ascii	"LedTask\000"
+  54      61736B00 
+  55              		.align	2
+  56              	.LC1:
+  57 0008 4F6C6564 		.ascii	"OledTask\000"
+  57      5461736B 
+  57      00
+  58              		.section	.text.MX_FREERTOS_Init,"ax",%progbits
+  59              		.align	1
+  60              		.global	MX_FREERTOS_Init
+  61              		.syntax unified
+  62              		.thumb
+  63              		.thumb_func
+  65              	MX_FREERTOS_Init:
+  66              	.LFB69:
+  75:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
+  67              		.loc 1 75 29 view -0
+  68              		.cfi_startproc
+  69              		@ args = 0, pretend = 0, frame = 8
+  70              		@ frame_needed = 0, uses_anonymous_args = 0
+  71 0000 10B5     		push	{r4, lr}
+  72              	.LCFI1:
+  73              		.cfi_def_cfa_offset 8
+  74              		.cfi_offset 4, -8
+  75              		.cfi_offset 14, -4
+  76 0002 84B0     		sub	sp, sp, #16
+  77              	.LCFI2:
+  78              		.cfi_def_cfa_offset 24
+  77:Core/Src/freertos.c **** 	BaseType_t xOledTask;
+  79              		.loc 1 77 4 view .LVU6
+  78:Core/Src/freertos.c **** 	TaskHandle_t xLedTaskHandle;
+  80              		.loc 1 78 2 view .LVU7
+  79:Core/Src/freertos.c **** 	TaskHandle_t xOledTaskHandle;
+  81              		.loc 1 79 2 view .LVU8
+  80:Core/Src/freertos.c **** 	OLED_Init();
+  82              		.loc 1 80 2 view .LVU9
+  81:Core/Src/freertos.c **** 	OLED_Clear();
+  83              		.loc 1 81 2 view .LVU10
+  84 0004 FFF7FEFF 		bl	OLED_Init
+  85              	.LVL3:
+  82:Core/Src/freertos.c ****   /* USER CODE END Init */
+  86              		.loc 1 82 2 view .LVU11
+  87 0008 FFF7FEFF 		bl	OLED_Clear
+  88              	.LVL4:
+ 103:Core/Src/freertos.c **** 
+  89              		.loc 1 103 3 view .LVU12
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s 			page 5
+
+
+ 103:Core/Src/freertos.c **** 
+  90              		.loc 1 103 23 is_stmt 0 view .LVU13
+  91 000c 0D4A     		ldr	r2, .L6
+  92 000e 0021     		movs	r1, #0
+  93 0010 0D48     		ldr	r0, .L6+4
+  94 0012 FFF7FEFF 		bl	osThreadNew
+  95              	.LVL5:
+ 103:Core/Src/freertos.c **** 
+  96              		.loc 1 103 21 view .LVU14
+  97 0016 0D4B     		ldr	r3, .L6+8
+  98 0018 1860     		str	r0, [r3]
+ 107:Core/Src/freertos.c **** 	xOledTask = xTaskCreate(OLED_Test, "OledTask", 128, NULL, 1, &xOledTaskHandle);
+  99              		.loc 1 107 2 is_stmt 1 view .LVU15
+ 107:Core/Src/freertos.c **** 	xOledTask = xTaskCreate(OLED_Test, "OledTask", 128, NULL, 1, &xOledTaskHandle);
+ 100              		.loc 1 107 13 is_stmt 0 view .LVU16
+ 101 001a 03AB     		add	r3, sp, #12
+ 102 001c 0193     		str	r3, [sp, #4]
+ 103 001e 0124     		movs	r4, #1
+ 104 0020 0094     		str	r4, [sp]
+ 105 0022 0023     		movs	r3, #0
+ 106 0024 8022     		movs	r2, #128
+ 107 0026 0A49     		ldr	r1, .L6+12
+ 108 0028 0A48     		ldr	r0, .L6+16
+ 109 002a FFF7FEFF 		bl	xTaskCreate
+ 110              	.LVL6:
+ 108:Core/Src/freertos.c ****   /* USER CODE END RTOS_THREADS */
+ 111              		.loc 1 108 2 is_stmt 1 view .LVU17
+ 108:Core/Src/freertos.c ****   /* USER CODE END RTOS_THREADS */
+ 112              		.loc 1 108 14 is_stmt 0 view .LVU18
+ 113 002e 02AB     		add	r3, sp, #8
+ 114 0030 0193     		str	r3, [sp, #4]
+ 115 0032 0094     		str	r4, [sp]
+ 116 0034 0023     		movs	r3, #0
+ 117 0036 8022     		movs	r2, #128
+ 118 0038 0749     		ldr	r1, .L6+20
+ 119 003a 0848     		ldr	r0, .L6+24
+ 120 003c FFF7FEFF 		bl	xTaskCreate
+ 121              	.LVL7:
+ 115:Core/Src/freertos.c **** 
+ 122              		.loc 1 115 1 view .LVU19
+ 123 0040 04B0     		add	sp, sp, #16
+ 124              	.LCFI3:
+ 125              		.cfi_def_cfa_offset 8
+ 126              		@ sp needed
+ 127 0042 10BD     		pop	{r4, pc}
+ 128              	.L7:
+ 129              		.align	2
+ 130              	.L6:
+ 131 0044 00000000 		.word	.LANCHOR0
+ 132 0048 00000000 		.word	StartDefaultTask
+ 133 004c 00000000 		.word	.LANCHOR1
+ 134 0050 00000000 		.word	.LC0
+ 135 0054 00000000 		.word	Led_Test
+ 136 0058 08000000 		.word	.LC1
+ 137 005c 00000000 		.word	OLED_Test
+ 138              		.cfi_endproc
+ 139              	.LFE69:
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s 			page 6
+
+
+ 141              		.global	defaultTask_attributes
+ 142              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 143              		.align	2
+ 144              	.LC2:
+ 145 0000 64656661 		.ascii	"defaultTask\000"
+ 145      756C7454 
+ 145      61736B00 
+ 146              		.global	defaultTaskHandle
+ 147              		.section	.bss.defaultTaskHandle,"aw",%nobits
+ 148              		.align	2
+ 149              		.set	.LANCHOR1,. + 0
+ 152              	defaultTaskHandle:
+ 153 0000 00000000 		.space	4
+ 154              		.section	.rodata.defaultTask_attributes,"a"
+ 155              		.align	2
+ 156              		.set	.LANCHOR0,. + 0
+ 159              	defaultTask_attributes:
+ 160 0000 00000000 		.word	.LC2
+ 161 0004 00000000 		.space	16
+ 161      00000000 
+ 161      00000000 
+ 161      00000000 
+ 162 0014 00020000 		.word	512
+ 163 0018 18000000 		.word	24
+ 164 001c 00000000 		.space	8
+ 164      00000000 
+ 165              		.text
+ 166              	.Letext0:
+ 167              		.file 2 "d:\\soft\\gcc_arm\\gcc-arm-none-eabi-10.3-2021.10\\arm-none-eabi\\include\\machine\\_defa
+ 168              		.file 3 "d:\\soft\\gcc_arm\\gcc-arm-none-eabi-10.3-2021.10\\arm-none-eabi\\include\\sys\\_stdint.h
+ 169              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3/portmacro.h"
+ 170              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 171              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 172              		.file 7 "Drivers/My_Drivers\\Include/driver_oled.h"
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 freertos.c
+C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s:18     .text.StartDefaultTask:00000000 $t
+C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s:24     .text.StartDefaultTask:00000000 StartDefaultTask
+C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s:52     .rodata.MX_FREERTOS_Init.str1.4:00000000 $d
+C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s:59     .text.MX_FREERTOS_Init:00000000 $t
+C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s:65     .text.MX_FREERTOS_Init:00000000 MX_FREERTOS_Init
+C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s:131    .text.MX_FREERTOS_Init:00000044 $d
+C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s:159    .rodata.defaultTask_attributes:00000000 defaultTask_attributes
+C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s:143    .rodata.str1.4:00000000 $d
+C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s:152    .bss.defaultTaskHandle:00000000 defaultTaskHandle
+C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s:148    .bss.defaultTaskHandle:00000000 $d
+C:\Users\26927\AppData\Local\Temp\ccPAgdZ0.s:155    .rodata.defaultTask_attributes:00000000 $d
+
+UNDEFINED SYMBOLS
+osDelay
+OLED_Init
+OLED_Clear
+osThreadNew
+xTaskCreate
+Led_Test
+OLED_Test

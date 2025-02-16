@@ -1,0 +1,37 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+			"forcedInclude": [
+				"${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h",
+				"${workspaceFolder}/Core/Inc/stm32f1xx_hal_conf.h"
+			],
+            "includePath": [
+                "${workspaceFolder}/**",
+                "./Core/Inc",
+                "./Drivers/STM32F1xx_HAL_Driver/Inc/Legacy",
+                "./Drivers/STM32F1xx_HAL_Driver/Inc",
+                "./Middlewares/Third_Party/FreeRTOS/Source/include",
+                "./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2",
+                "./Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3",
+                "./Drivers/CMSIS/Device/ST/STM32F1xx/Include",
+                "./Drivers/CMSIS/Include",
+                "./Drivers/My_Drivers/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+				"__CC_ARM",
+				"__IO",
+				"USE_HAL_DRIVER",
+				"STM32F103xB"
+            ],
+            "compilerPath": "D:\\soft\\MinGW\\mingw64\\bin\\gcc.exe",
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}

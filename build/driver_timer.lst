@@ -1,0 +1,495 @@
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"driver_timer.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.udelay,"ax",%progbits
+  18              		.align	1
+  19              		.global	udelay
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	udelay:
+  25              	.LVL0:
+  26              	.LFB65:
+  27              		.file 1 "Drivers/My_Drivers/src/driver_timer.c"
+   1:Drivers/My_Drivers/src/driver_timer.c **** // SPDX-License-Identifier: GPL-3.0-only
+   2:Drivers/My_Drivers/src/driver_timer.c **** /*
+   3:Drivers/My_Drivers/src/driver_timer.c ****  * Copyright (c) 2008-2023 100askTeam : Dongshan WEI <weidongshan@qq.com> 
+   4:Drivers/My_Drivers/src/driver_timer.c ****  * Discourse:  https://forums.100ask.net
+   5:Drivers/My_Drivers/src/driver_timer.c ****  */
+   6:Drivers/My_Drivers/src/driver_timer.c **** 
+   7:Drivers/My_Drivers/src/driver_timer.c ****  
+   8:Drivers/My_Drivers/src/driver_timer.c **** /*  Copyright (C) 2008-2023 深圳百问网科技有限公司
+   9:Drivers/My_Drivers/src/driver_timer.c ****  *  All rights reserved
+  10:Drivers/My_Drivers/src/driver_timer.c ****  *
+  11:Drivers/My_Drivers/src/driver_timer.c ****  *
+  12:Drivers/My_Drivers/src/driver_timer.c ****  * 免责声明: 百问网编写的文档，仅供学员学习使用，可以转发或引用(请保
+  13:Drivers/My_Drivers/src/driver_timer.c ****  * 免责声明: 百问网编写的程序，可以用于商业用途，但百问网不承担任何�
+  14:Drivers/My_Drivers/src/driver_timer.c ****  * 
+  15:Drivers/My_Drivers/src/driver_timer.c ****  * 摘要：
+  16:Drivers/My_Drivers/src/driver_timer.c ****  *			本程序遵循GPL V3协议，使用请遵循协议许可
+  17:Drivers/My_Drivers/src/driver_timer.c ****  *			本程序所用的开发板：	DShanMCU-F103
+  18:Drivers/My_Drivers/src/driver_timer.c ****  *			百问网嵌入式学习平台：https://www.100ask.net
+  19:Drivers/My_Drivers/src/driver_timer.c ****  *			百问网技术交流社区：	https://forums.100ask.net
+  20:Drivers/My_Drivers/src/driver_timer.c ****  *			百问网官方B站：				https://space.bilibili.com/275908810
+  21:Drivers/My_Drivers/src/driver_timer.c ****  *			百问网官方淘宝：			https://100ask.taobao.com
+  22:Drivers/My_Drivers/src/driver_timer.c ****  *			联系我们(E-mail)：	  weidongshan@qq.com
+  23:Drivers/My_Drivers/src/driver_timer.c ****  *
+  24:Drivers/My_Drivers/src/driver_timer.c ****  *			版权所有，盗版必究。
+  25:Drivers/My_Drivers/src/driver_timer.c ****  *  
+  26:Drivers/My_Drivers/src/driver_timer.c ****  * 修改历史     版本号           作者        修改内容
+  27:Drivers/My_Drivers/src/driver_timer.c ****  *-----------------------------------------------------
+  28:Drivers/My_Drivers/src/driver_timer.c ****  * 2023.08.04      v01         百问科技      创建文件
+  29:Drivers/My_Drivers/src/driver_timer.c ****  *-----------------------------------------------------
+  30:Drivers/My_Drivers/src/driver_timer.c **** */
+  31:Drivers/My_Drivers/src/driver_timer.c **** 
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s 			page 2
+
+
+  32:Drivers/My_Drivers/src/driver_timer.c **** 
+  33:Drivers/My_Drivers/src/driver_timer.c **** 
+  34:Drivers/My_Drivers/src/driver_timer.c **** #include "driver_timer.h"
+  35:Drivers/My_Drivers/src/driver_timer.c **** #include "stm32f1xx_hal.h"
+  36:Drivers/My_Drivers/src/driver_timer.c **** 
+  37:Drivers/My_Drivers/src/driver_timer.c **** /**********************************************************************
+  38:Drivers/My_Drivers/src/driver_timer.c ****  * 函数名称： udelay
+  39:Drivers/My_Drivers/src/driver_timer.c ****  * 功能描述： us级别的延时函数(复制rt-thread的代码)
+  40:Drivers/My_Drivers/src/driver_timer.c ****  * 输入参数： us - 延时多少us
+  41:Drivers/My_Drivers/src/driver_timer.c ****  * 输出参数： 无
+  42:Drivers/My_Drivers/src/driver_timer.c ****  * 返 回 值： 无
+  43:Drivers/My_Drivers/src/driver_timer.c ****  * 修改日期        版本号     修改人	      修改内容
+  44:Drivers/My_Drivers/src/driver_timer.c ****  * -----------------------------------------------
+  45:Drivers/My_Drivers/src/driver_timer.c ****  * 2023/08/03	     V1.0	  韦东山	      创建
+  46:Drivers/My_Drivers/src/driver_timer.c ****  ***********************************************************************/
+  47:Drivers/My_Drivers/src/driver_timer.c **** void udelay(int us)
+  48:Drivers/My_Drivers/src/driver_timer.c **** {
+  28              		.loc 1 48 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  33              		.loc 1 48 1 is_stmt 0 view .LVU1
+  34 0000 10B4     		push	{r4}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 4
+  37              		.cfi_offset 4, -4
+  49:Drivers/My_Drivers/src/driver_timer.c **** #if 0    
+  50:Drivers/My_Drivers/src/driver_timer.c ****     uint32_t ticks;
+  51:Drivers/My_Drivers/src/driver_timer.c ****     uint32_t told, tnow, tcnt = 0;
+  52:Drivers/My_Drivers/src/driver_timer.c ****     uint32_t reload = SysTick->LOAD;
+  53:Drivers/My_Drivers/src/driver_timer.c **** 
+  54:Drivers/My_Drivers/src/driver_timer.c ****     ticks = us * reload / (1000);  /* 假设reload对应1ms */
+  55:Drivers/My_Drivers/src/driver_timer.c ****     told = SysTick->VAL;
+  56:Drivers/My_Drivers/src/driver_timer.c ****     while (1)
+  57:Drivers/My_Drivers/src/driver_timer.c ****     {
+  58:Drivers/My_Drivers/src/driver_timer.c ****         tnow = SysTick->VAL;
+  59:Drivers/My_Drivers/src/driver_timer.c ****         if (tnow != told)
+  60:Drivers/My_Drivers/src/driver_timer.c ****         {
+  61:Drivers/My_Drivers/src/driver_timer.c ****             if (tnow < told)
+  62:Drivers/My_Drivers/src/driver_timer.c ****             {
+  63:Drivers/My_Drivers/src/driver_timer.c ****                 tcnt += told - tnow;
+  64:Drivers/My_Drivers/src/driver_timer.c ****             }
+  65:Drivers/My_Drivers/src/driver_timer.c ****             else
+  66:Drivers/My_Drivers/src/driver_timer.c ****             {
+  67:Drivers/My_Drivers/src/driver_timer.c ****                 tcnt += reload - tnow + told;
+  68:Drivers/My_Drivers/src/driver_timer.c ****             }
+  69:Drivers/My_Drivers/src/driver_timer.c ****             told = tnow;
+  70:Drivers/My_Drivers/src/driver_timer.c ****             if (tcnt >= ticks)
+  71:Drivers/My_Drivers/src/driver_timer.c ****             {
+  72:Drivers/My_Drivers/src/driver_timer.c ****                 break;
+  73:Drivers/My_Drivers/src/driver_timer.c ****             }
+  74:Drivers/My_Drivers/src/driver_timer.c ****         }
+  75:Drivers/My_Drivers/src/driver_timer.c ****     }
+  76:Drivers/My_Drivers/src/driver_timer.c **** #else
+  77:Drivers/My_Drivers/src/driver_timer.c ****     extern TIM_HandleTypeDef        htim4;
+  38              		.loc 1 77 5 is_stmt 1 view .LVU2
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s 			page 3
+
+
+  78:Drivers/My_Drivers/src/driver_timer.c ****     TIM_HandleTypeDef *hHalTim = &htim4;
+  39              		.loc 1 78 5 view .LVU3
+  40              	.LVL1:
+  79:Drivers/My_Drivers/src/driver_timer.c **** 
+  80:Drivers/My_Drivers/src/driver_timer.c ****     uint32_t ticks;
+  41              		.loc 1 80 5 view .LVU4
+  81:Drivers/My_Drivers/src/driver_timer.c ****     uint32_t told, tnow, tcnt = 0;
+  42              		.loc 1 81 5 view .LVU5
+  82:Drivers/My_Drivers/src/driver_timer.c ****     uint32_t reload = __HAL_TIM_GET_AUTORELOAD(hHalTim);
+  43              		.loc 1 82 5 view .LVU6
+  44              		.loc 1 82 23 is_stmt 0 view .LVU7
+  45 0002 0E4B     		ldr	r3, .L8
+  46 0004 1968     		ldr	r1, [r3]
+  47              		.loc 1 82 14 view .LVU8
+  48 0006 CC6A     		ldr	r4, [r1, #44]
+  49              	.LVL2:
+  83:Drivers/My_Drivers/src/driver_timer.c **** 
+  84:Drivers/My_Drivers/src/driver_timer.c ****     ticks = us * reload / (1000);  /* 假设reload对应1ms */
+  50              		.loc 1 84 5 is_stmt 1 view .LVU9
+  51              		.loc 1 84 16 is_stmt 0 view .LVU10
+  52 0008 04FB00FC 		mul	ip, r4, r0
+  53              		.loc 1 84 11 view .LVU11
+  54 000c 0C4B     		ldr	r3, .L8+4
+  55 000e A3FB0C3C 		umull	r3, ip, r3, ip
+  56 0012 4FEA9C1C 		lsr	ip, ip, #6
+  57              	.LVL3:
+  85:Drivers/My_Drivers/src/driver_timer.c ****     told = __HAL_TIM_GET_COUNTER(hHalTim);
+  58              		.loc 1 85 5 is_stmt 1 view .LVU12
+  59              		.loc 1 85 10 is_stmt 0 view .LVU13
+  60 0016 4B6A     		ldr	r3, [r1, #36]
+  61              	.LVL4:
+  81:Drivers/My_Drivers/src/driver_timer.c ****     uint32_t reload = __HAL_TIM_GET_AUTORELOAD(hHalTim);
+  62              		.loc 1 81 26 view .LVU14
+  63 0018 0020     		movs	r0, #0
+  64              	.LVL5:
+  81:Drivers/My_Drivers/src/driver_timer.c ****     uint32_t reload = __HAL_TIM_GET_AUTORELOAD(hHalTim);
+  65              		.loc 1 81 26 view .LVU15
+  66 001a 04E0     		b	.L5
+  67              	.LVL6:
+  68              	.L3:
+  86:Drivers/My_Drivers/src/driver_timer.c ****     while (1)
+  87:Drivers/My_Drivers/src/driver_timer.c ****     {
+  88:Drivers/My_Drivers/src/driver_timer.c ****         tnow = __HAL_TIM_GET_COUNTER(hHalTim);
+  89:Drivers/My_Drivers/src/driver_timer.c ****         if (tnow != told)
+  90:Drivers/My_Drivers/src/driver_timer.c ****         {
+  91:Drivers/My_Drivers/src/driver_timer.c ****             if (tnow > told)
+  92:Drivers/My_Drivers/src/driver_timer.c ****             {
+  93:Drivers/My_Drivers/src/driver_timer.c ****                 tcnt += tnow - told;
+  94:Drivers/My_Drivers/src/driver_timer.c ****             }
+  95:Drivers/My_Drivers/src/driver_timer.c ****             else
+  96:Drivers/My_Drivers/src/driver_timer.c ****             {
+  97:Drivers/My_Drivers/src/driver_timer.c ****                 tcnt += reload - told + tnow;
+  69              		.loc 1 97 17 is_stmt 1 view .LVU16
+  70              		.loc 1 97 32 is_stmt 0 view .LVU17
+  71 001c A21A     		subs	r2, r4, r2
+  72              	.LVL7:
+  73              		.loc 1 97 39 view .LVU18
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s 			page 4
+
+
+  74 001e 1A44     		add	r2, r2, r3
+  75              		.loc 1 97 22 view .LVU19
+  76 0020 1044     		add	r0, r0, r2
+  77              	.LVL8:
+  78              	.L4:
+  98:Drivers/My_Drivers/src/driver_timer.c ****             }
+  99:Drivers/My_Drivers/src/driver_timer.c ****             told = tnow;
+  79              		.loc 1 99 13 is_stmt 1 view .LVU20
+ 100:Drivers/My_Drivers/src/driver_timer.c ****             if (tcnt >= ticks)
+  80              		.loc 1 100 13 view .LVU21
+  81              		.loc 1 100 16 is_stmt 0 view .LVU22
+  82 0022 6045     		cmp	r0, ip
+  83 0024 07D2     		bcs	.L7
+  84              	.LVL9:
+  85              	.L5:
+  81:Drivers/My_Drivers/src/driver_timer.c ****     uint32_t reload = __HAL_TIM_GET_AUTORELOAD(hHalTim);
+  86              		.loc 1 81 26 view .LVU23
+  87 0026 1A46     		mov	r2, r3
+  88              	.LVL10:
+  89              	.L2:
+  86:Drivers/My_Drivers/src/driver_timer.c ****     {
+  90              		.loc 1 86 5 is_stmt 1 view .LVU24
+  88:Drivers/My_Drivers/src/driver_timer.c ****         if (tnow != told)
+  91              		.loc 1 88 9 view .LVU25
+  88:Drivers/My_Drivers/src/driver_timer.c ****         if (tnow != told)
+  92              		.loc 1 88 14 is_stmt 0 view .LVU26
+  93 0028 4B6A     		ldr	r3, [r1, #36]
+  94              	.LVL11:
+  89:Drivers/My_Drivers/src/driver_timer.c ****         {
+  95              		.loc 1 89 9 is_stmt 1 view .LVU27
+  89:Drivers/My_Drivers/src/driver_timer.c ****         {
+  96              		.loc 1 89 12 is_stmt 0 view .LVU28
+  97 002a 9A42     		cmp	r2, r3
+  98 002c FCD0     		beq	.L2
+  91:Drivers/My_Drivers/src/driver_timer.c ****             {
+  99              		.loc 1 91 13 is_stmt 1 view .LVU29
+  91:Drivers/My_Drivers/src/driver_timer.c ****             {
+ 100              		.loc 1 91 16 is_stmt 0 view .LVU30
+ 101 002e F5D2     		bcs	.L3
+  93:Drivers/My_Drivers/src/driver_timer.c ****             }
+ 102              		.loc 1 93 17 is_stmt 1 view .LVU31
+  93:Drivers/My_Drivers/src/driver_timer.c ****             }
+ 103              		.loc 1 93 30 is_stmt 0 view .LVU32
+ 104 0030 9A1A     		subs	r2, r3, r2
+ 105              	.LVL12:
+  93:Drivers/My_Drivers/src/driver_timer.c ****             }
+ 106              		.loc 1 93 22 view .LVU33
+ 107 0032 1044     		add	r0, r0, r2
+ 108              	.LVL13:
+  93:Drivers/My_Drivers/src/driver_timer.c ****             }
+ 109              		.loc 1 93 22 view .LVU34
+ 110 0034 F5E7     		b	.L4
+ 111              	.LVL14:
+ 112              	.L7:
+ 101:Drivers/My_Drivers/src/driver_timer.c ****             {
+ 102:Drivers/My_Drivers/src/driver_timer.c ****                 break;
+ 103:Drivers/My_Drivers/src/driver_timer.c ****             }
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s 			page 5
+
+
+ 104:Drivers/My_Drivers/src/driver_timer.c ****         }
+ 105:Drivers/My_Drivers/src/driver_timer.c ****     }
+ 106:Drivers/My_Drivers/src/driver_timer.c **** #endif
+ 107:Drivers/My_Drivers/src/driver_timer.c **** }
+ 113              		.loc 1 107 1 view .LVU35
+ 114 0036 10BC     		pop	{r4}
+ 115              	.LCFI1:
+ 116              		.cfi_restore 4
+ 117              		.cfi_def_cfa_offset 0
+ 118              	.LVL15:
+ 119              		.loc 1 107 1 view .LVU36
+ 120 0038 7047     		bx	lr
+ 121              	.L9:
+ 122 003a 00BF     		.align	2
+ 123              	.L8:
+ 124 003c 00000000 		.word	htim4
+ 125 0040 D34D6210 		.word	274877907
+ 126              		.cfi_endproc
+ 127              	.LFE65:
+ 129              		.section	.text.mdelay,"ax",%progbits
+ 130              		.align	1
+ 131              		.global	mdelay
+ 132              		.syntax unified
+ 133              		.thumb
+ 134              		.thumb_func
+ 136              	mdelay:
+ 137              	.LVL16:
+ 138              	.LFB66:
+ 108:Drivers/My_Drivers/src/driver_timer.c **** 
+ 109:Drivers/My_Drivers/src/driver_timer.c **** 
+ 110:Drivers/My_Drivers/src/driver_timer.c **** /**********************************************************************
+ 111:Drivers/My_Drivers/src/driver_timer.c ****  * 函数名称： mdelay
+ 112:Drivers/My_Drivers/src/driver_timer.c ****  * 功能描述： ms级别的延时函数
+ 113:Drivers/My_Drivers/src/driver_timer.c ****  * 输入参数： ms - 延时多少ms
+ 114:Drivers/My_Drivers/src/driver_timer.c ****  * 输出参数： 无
+ 115:Drivers/My_Drivers/src/driver_timer.c ****  * 返 回 值： 无
+ 116:Drivers/My_Drivers/src/driver_timer.c ****  * 修改日期        版本号     修改人	      修改内容
+ 117:Drivers/My_Drivers/src/driver_timer.c ****  * -----------------------------------------------
+ 118:Drivers/My_Drivers/src/driver_timer.c ****  * 2023/08/03	     V1.0	  韦东山	      创建
+ 119:Drivers/My_Drivers/src/driver_timer.c ****  ***********************************************************************/
+ 120:Drivers/My_Drivers/src/driver_timer.c **** void mdelay(int ms)
+ 121:Drivers/My_Drivers/src/driver_timer.c **** {
+ 139              		.loc 1 121 1 is_stmt 1 view -0
+ 140              		.cfi_startproc
+ 141              		@ args = 0, pretend = 0, frame = 0
+ 142              		@ frame_needed = 0, uses_anonymous_args = 0
+ 143              		.loc 1 121 1 is_stmt 0 view .LVU38
+ 144 0000 38B5     		push	{r3, r4, r5, lr}
+ 145              	.LCFI2:
+ 146              		.cfi_def_cfa_offset 16
+ 147              		.cfi_offset 3, -16
+ 148              		.cfi_offset 4, -12
+ 149              		.cfi_offset 5, -8
+ 150              		.cfi_offset 14, -4
+ 151 0002 0546     		mov	r5, r0
+ 122:Drivers/My_Drivers/src/driver_timer.c ****     for (int i = 0; i < ms; i++)
+ 152              		.loc 1 122 5 is_stmt 1 view .LVU39
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s 			page 6
+
+
+ 153              	.LBB2:
+ 154              		.loc 1 122 10 view .LVU40
+ 155              	.LVL17:
+ 156              		.loc 1 122 14 is_stmt 0 view .LVU41
+ 157 0004 0024     		movs	r4, #0
+ 158              		.loc 1 122 5 view .LVU42
+ 159 0006 04E0     		b	.L11
+ 160              	.LVL18:
+ 161              	.L12:
+ 123:Drivers/My_Drivers/src/driver_timer.c ****         udelay(1000);
+ 162              		.loc 1 123 9 is_stmt 1 discriminator 3 view .LVU43
+ 163 0008 4FF47A70 		mov	r0, #1000
+ 164 000c FFF7FEFF 		bl	udelay
+ 165              	.LVL19:
+ 122:Drivers/My_Drivers/src/driver_timer.c ****     for (int i = 0; i < ms; i++)
+ 166              		.loc 1 122 29 discriminator 3 view .LVU44
+ 122:Drivers/My_Drivers/src/driver_timer.c ****     for (int i = 0; i < ms; i++)
+ 167              		.loc 1 122 30 is_stmt 0 discriminator 3 view .LVU45
+ 168 0010 0134     		adds	r4, r4, #1
+ 169              	.LVL20:
+ 170              	.L11:
+ 122:Drivers/My_Drivers/src/driver_timer.c ****     for (int i = 0; i < ms; i++)
+ 171              		.loc 1 122 21 is_stmt 1 discriminator 1 view .LVU46
+ 122:Drivers/My_Drivers/src/driver_timer.c ****     for (int i = 0; i < ms; i++)
+ 172              		.loc 1 122 5 is_stmt 0 discriminator 1 view .LVU47
+ 173 0012 AC42     		cmp	r4, r5
+ 174 0014 F8DB     		blt	.L12
+ 175              	.LBE2:
+ 124:Drivers/My_Drivers/src/driver_timer.c **** }
+ 176              		.loc 1 124 1 view .LVU48
+ 177 0016 38BD     		pop	{r3, r4, r5, pc}
+ 178              		.loc 1 124 1 view .LVU49
+ 179              		.cfi_endproc
+ 180              	.LFE66:
+ 182              		.global	__aeabi_uldivmod
+ 183              		.section	.text.system_get_ns,"ax",%progbits
+ 184              		.align	1
+ 185              		.global	system_get_ns
+ 186              		.syntax unified
+ 187              		.thumb
+ 188              		.thumb_func
+ 190              	system_get_ns:
+ 191              	.LFB67:
+ 125:Drivers/My_Drivers/src/driver_timer.c **** 
+ 126:Drivers/My_Drivers/src/driver_timer.c **** /**********************************************************************
+ 127:Drivers/My_Drivers/src/driver_timer.c ****  * 函数名称： system_get_ns
+ 128:Drivers/My_Drivers/src/driver_timer.c ****  * 功能描述： 获得系统时间(单位ns)
+ 129:Drivers/My_Drivers/src/driver_timer.c ****  * 输入参数： 无
+ 130:Drivers/My_Drivers/src/driver_timer.c ****  * 输出参数： 无
+ 131:Drivers/My_Drivers/src/driver_timer.c ****  * 返 回 值： 系统时间(单位ns)
+ 132:Drivers/My_Drivers/src/driver_timer.c ****  * 修改日期        版本号     修改人	      修改内容
+ 133:Drivers/My_Drivers/src/driver_timer.c ****  * -----------------------------------------------
+ 134:Drivers/My_Drivers/src/driver_timer.c ****  * 2023/08/03	     V1.0	  韦东山	      创建
+ 135:Drivers/My_Drivers/src/driver_timer.c ****  ***********************************************************************/
+ 136:Drivers/My_Drivers/src/driver_timer.c **** uint64_t system_get_ns(void)
+ 137:Drivers/My_Drivers/src/driver_timer.c **** {
+ 192              		.loc 1 137 1 is_stmt 1 view -0
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s 			page 7
+
+
+ 193              		.cfi_startproc
+ 194              		@ args = 0, pretend = 0, frame = 0
+ 195              		@ frame_needed = 0, uses_anonymous_args = 0
+ 196 0000 70B5     		push	{r4, r5, r6, lr}
+ 197              	.LCFI3:
+ 198              		.cfi_def_cfa_offset 16
+ 199              		.cfi_offset 4, -16
+ 200              		.cfi_offset 5, -12
+ 201              		.cfi_offset 6, -8
+ 202              		.cfi_offset 14, -4
+ 138:Drivers/My_Drivers/src/driver_timer.c ****     //extern uint32_t HAL_GetTick(void);
+ 139:Drivers/My_Drivers/src/driver_timer.c ****     extern TIM_HandleTypeDef        htim4;
+ 203              		.loc 1 139 5 view .LVU51
+ 140:Drivers/My_Drivers/src/driver_timer.c ****     TIM_HandleTypeDef *hHalTim = &htim4;
+ 204              		.loc 1 140 5 view .LVU52
+ 205              	.LVL21:
+ 141:Drivers/My_Drivers/src/driver_timer.c ****     
+ 142:Drivers/My_Drivers/src/driver_timer.c ****     uint64_t ns = HAL_GetTick();
+ 206              		.loc 1 142 5 view .LVU53
+ 207              		.loc 1 142 19 is_stmt 0 view .LVU54
+ 208 0002 FFF7FEFF 		bl	HAL_GetTick
+ 209              	.LVL22:
+ 143:Drivers/My_Drivers/src/driver_timer.c ****     uint64_t cnt;
+ 210              		.loc 1 143 5 is_stmt 1 view .LVU55
+ 144:Drivers/My_Drivers/src/driver_timer.c ****     uint64_t reload;
+ 211              		.loc 1 144 5 view .LVU56
+ 145:Drivers/My_Drivers/src/driver_timer.c **** 
+ 146:Drivers/My_Drivers/src/driver_timer.c ****     cnt = __HAL_TIM_GET_COUNTER(hHalTim);
+ 212              		.loc 1 146 5 view .LVU57
+ 213              		.loc 1 146 11 is_stmt 0 view .LVU58
+ 214 0006 1C4B     		ldr	r3, .L16
+ 215 0008 1B68     		ldr	r3, [r3]
+ 216 000a 5E6A     		ldr	r6, [r3, #36]
+ 217              	.LVL23:
+ 147:Drivers/My_Drivers/src/driver_timer.c ****     reload = __HAL_TIM_GET_AUTORELOAD(hHalTim);
+ 218              		.loc 1 147 5 is_stmt 1 view .LVU59
+ 219              		.loc 1 147 14 is_stmt 0 view .LVU60
+ 220 000c DA6A     		ldr	r2, [r3, #44]
+ 221              	.LVL24:
+ 148:Drivers/My_Drivers/src/driver_timer.c **** 
+ 149:Drivers/My_Drivers/src/driver_timer.c ****     ns *= 1000000;
+ 222              		.loc 1 149 5 is_stmt 1 view .LVU61
+ 223              		.loc 1 149 8 is_stmt 0 view .LVU62
+ 224 000e C50E     		lsrs	r5, r0, #27
+ 225 0010 4301     		lsls	r3, r0, #5
+ 226 0012 1B1A     		subs	r3, r3, r0
+ 227 0014 65F10005 		sbc	r5, r5, #0
+ 228 0018 6D02     		lsls	r5, r5, #9
+ 229 001a 45EAD355 		orr	r5, r5, r3, lsr #23
+ 230 001e 5B02     		lsls	r3, r3, #9
+ 231 0020 1B18     		adds	r3, r3, r0
+ 232 0022 45F10005 		adc	r5, r5, #0
+ 233 0026 A901     		lsls	r1, r5, #6
+ 234 0028 41EA9361 		orr	r1, r1, r3, lsr #26
+ 235 002c 9C01     		lsls	r4, r3, #6
+ 236 002e E31A     		subs	r3, r4, r3
+ 237 0030 61EB0505 		sbc	r5, r1, r5
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s 			page 8
+
+
+ 238 0034 1C18     		adds	r4, r3, r0
+ 239 0036 45F10005 		adc	r5, r5, #0
+ 240              	.LVL25:
+ 150:Drivers/My_Drivers/src/driver_timer.c ****     ns += cnt * 1000000 / reload;
+ 241              		.loc 1 150 5 is_stmt 1 view .LVU63
+ 242              		.loc 1 150 15 is_stmt 0 view .LVU64
+ 243 003a F10E     		lsrs	r1, r6, #27
+ 244 003c 7301     		lsls	r3, r6, #5
+ 245 003e 9B1B     		subs	r3, r3, r6
+ 246 0040 61F10001 		sbc	r1, r1, #0
+ 247 0044 4902     		lsls	r1, r1, #9
+ 248 0046 41EAD351 		orr	r1, r1, r3, lsr #23
+ 249 004a 5B02     		lsls	r3, r3, #9
+ 250 004c 9B19     		adds	r3, r3, r6
+ 251 004e 41F10001 		adc	r1, r1, #0
+ 252 0052 4FEA811C 		lsl	ip, r1, #6
+ 253 0056 4CEA936C 		orr	ip, ip, r3, lsr #26
+ 254 005a 9801     		lsls	r0, r3, #6
+ 255 005c C31A     		subs	r3, r0, r3
+ 256 005e 6CEB0101 		sbc	r1, ip, r1
+ 257 0062 9819     		adds	r0, r3, r6
+ 258              		.loc 1 150 25 view .LVU65
+ 259 0064 4FF00003 		mov	r3, #0
+ 260 0068 41F10001 		adc	r1, r1, #0
+ 261 006c FFF7FEFF 		bl	__aeabi_uldivmod
+ 262              	.LVL26:
+ 263              		.loc 1 150 8 view .LVU66
+ 264 0070 2018     		adds	r0, r4, r0
+ 265              	.LVL27:
+ 151:Drivers/My_Drivers/src/driver_timer.c ****     return ns;
+ 266              		.loc 1 151 5 is_stmt 1 view .LVU67
+ 152:Drivers/My_Drivers/src/driver_timer.c **** }
+ 267              		.loc 1 152 1 is_stmt 0 view .LVU68
+ 268 0072 45EB0101 		adc	r1, r5, r1
+ 269              	.LVL28:
+ 270              		.loc 1 152 1 view .LVU69
+ 271 0076 70BD     		pop	{r4, r5, r6, pc}
+ 272              	.LVL29:
+ 273              	.L17:
+ 274              		.loc 1 152 1 view .LVU70
+ 275              		.align	2
+ 276              	.L16:
+ 277 0078 00000000 		.word	htim4
+ 278              		.cfi_endproc
+ 279              	.LFE67:
+ 281              		.text
+ 282              	.Letext0:
+ 283              		.file 2 "d:\\soft\\gcc_arm\\gcc-arm-none-eabi-10.3-2021.10\\arm-none-eabi\\include\\machine\\_defa
+ 284              		.file 3 "d:\\soft\\gcc_arm\\gcc-arm-none-eabi-10.3-2021.10\\arm-none-eabi\\include\\sys\\_stdint.h
+ 285              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 286              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 287              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 288              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h"
+ 289              		.file 8 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ARM GAS  C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 driver_timer.c
+C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s:18     .text.udelay:00000000 $t
+C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s:24     .text.udelay:00000000 udelay
+C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s:124    .text.udelay:0000003c $d
+C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s:130    .text.mdelay:00000000 $t
+C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s:136    .text.mdelay:00000000 mdelay
+C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s:184    .text.system_get_ns:00000000 $t
+C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s:190    .text.system_get_ns:00000000 system_get_ns
+C:\Users\26927\AppData\Local\Temp\ccJlHsJh.s:277    .text.system_get_ns:00000078 $d
+
+UNDEFINED SYMBOLS
+htim4
+__aeabi_uldivmod
+HAL_GetTick

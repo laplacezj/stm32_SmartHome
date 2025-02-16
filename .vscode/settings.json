@@ -1,0 +1,13 @@
+{
+	"files.associations": {
+		"main.h": "c",
+		"adc.h": "c",
+		"freertos.h": "c",
+		"driver_led.h": "c",
+		"stm32f103x6.h": "c",
+		"driver_oled.h": "c",
+		"driver_oled_font.h": "c",
+		"driver_timer.h": "c",
+		"compare": "cpp"
+	}
+}
