@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Win32",
+            "name": "STM32F103C8T6",
 			"forcedInclude": [
 				"${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h",
 				"${workspaceFolder}/Core/Inc/stm32f1xx_hal_conf.h"
@@ -13,7 +13,7 @@
                 "./Drivers/STM32F1xx_HAL_Driver/Inc",
                 "./Middlewares/Third_Party/FreeRTOS/Source/include",
                 "./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2",
-                "./Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3",
+                //"./Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3",
                 "./Drivers/CMSIS/Device/ST/STM32F1xx/Include",
                 "./Drivers/CMSIS/Include",
                 "./Drivers/My_Drivers/include"

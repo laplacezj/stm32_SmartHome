@@ -8,6 +8,16 @@
 		"driver_oled.h": "c",
 		"driver_oled_font.h": "c",
 		"driver_timer.h": "c",
-		"compare": "cpp"
+		"compare": "cpp",
+		"stm32_hal_legacy.h": "c",
+		"delay.h": "c",
+		"driver_dht11.h": "c",
+		"stdint.h": "c",
+		"cstdint": "c",
+		"cmsis_os.h": "c",
+		"task.h": "c",
+		"cstdio": "c",
+		"stdarg.h": "c",
+		"usart.h": "c"
 	}
 }

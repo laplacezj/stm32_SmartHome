@@ -331,6 +331,7 @@ void OLED_Init(void)
 
 void OLED_Test(void)
 {
+	printf("OLED_Test\r\n");
 	while (1)
 	{
 		OLED_ShowString(1, 1, "Hello World!");

@@ -102,7 +102,7 @@ int Led_Control(int which, int on)
 void Led_Test(void)
 {
     //Led_Init();
-
+	printf("Led_Test\n");
     while (1)
     {
         Led_Control(LED_GREEN, 1);

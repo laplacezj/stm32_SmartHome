@@ -28,6 +28,7 @@
 #include "driver_led.h"
 #include "driver_oled.h"
 #include "driver_timer.h"
+#include "driver_dht11.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -74,10 +75,10 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-  	BaseType_t xLedTask;
-	BaseType_t xOledTask;
+  	BaseType_t xReturn;
 	TaskHandle_t xLedTaskHandle;
 	TaskHandle_t xOledTaskHandle;
+	TaskHandle_t xDht11TaskHandle;
 	OLED_Init();
 	OLED_Clear();
   /* USER CODE END Init */
@@ -104,8 +105,9 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
-	xLedTask = xTaskCreate(Led_Test, "LedTask", 128, NULL, 1, &xLedTaskHandle);
-	xOledTask = xTaskCreate(OLED_Test, "OledTask", 128, NULL, 1, &xOledTaskHandle);
+	xReturn = xTaskCreate(Led_Test, "LedTask", 128, NULL, 1, &xLedTaskHandle);
+	xReturn = xTaskCreate(OLED_Test, "OledTask", 128, NULL, 1, &xOledTaskHandle);
+	xReturn = xTaskCreate(DHT11_Test, "Dht11Task", 128, NULL, 1, &xDht11TaskHandle);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
