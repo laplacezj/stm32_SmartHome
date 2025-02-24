@@ -175,19 +175,19 @@ uint8_t DHT11_Read_TempAndHumidity(DHT11_Data_TypeDef *DHT11_Data)
            DHT11_Data->temp_high8bit+ DHT11_Data->temp_low8bit;
     if(DHT11_Data->check_sum==temp)
     { 
-		myPrint("seccess\n");
+		myPrint("dht11 get seccess\n");
 		return SUCCESS;
     }
     else
 	{
-		myPrint("error111\n");
+		myPrint("dht11 error111\n");
 		return ERROR;
 	}
     
 	}	
 	else
 	{
-		myPrint("error222\n");
+		myPrint("dht11 error222\n");
 		return ERROR;
 	}
 		

@@ -18,6 +18,9 @@
 		"task.h": "c",
 		"cstdio": "c",
 		"stdarg.h": "c",
-		"usart.h": "c"
+		"usart.h": "c",
+		"my_print.h": "c",
+		"string.h": "c",
+		"uart_mana.h": "c"
 	}
 }

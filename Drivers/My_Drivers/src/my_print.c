@@ -1,11 +1,15 @@
 #include "my_print.h"
 #include "usart.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 // 轻量级格式化核心（支持%d, %u, %x, %s, %c）
 void myPrint(const char *format, ...) {
+
     va_list args;
     va_start(args, format);
-    
+	
+	//taskENTER_CRITICAL();
     while (*format) {
         if (*format == '%') {
             switch (*++format) {
@@ -58,6 +62,7 @@ void myPrint(const char *format, ...) {
         format++;
     }
     va_end(args);
+	//taskEXIT_CRITICAL();
 }
 
 /* 用户需要实现的底层发送函数（示例：HAL库串口发送） */

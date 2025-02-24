@@ -109,7 +109,7 @@ void Led_Test(void)
         vTaskDelay(500);
 
         Led_Control(LED_GREEN, 0);
-        mdelay(500);
+        vTaskDelay(500);
     }
 }
 
