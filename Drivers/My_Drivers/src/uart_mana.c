@@ -32,7 +32,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	if (huart->Instance == USART3) // 确保是期望的UART实例
 	{
 		HAL_UART_Receive_IT(huart, &Voice_Data, 1);
-		myPrint("Voice: %d\r\n", Voice_Data);
+		//myPrint("Voice: %d\r\n", Voice_Data);
 	}
 	
 	if(huart->Instance == USART2)

@@ -71,7 +71,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  char *CntState = "NO Connect!\r\n";
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -100,7 +100,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   setup_uart_interrupt();
   //DHT11_Init(); 
-  ESP8266_Init();
+  //ESP8266_Init();
   /* USER CODE END 2 */
 
   /* Init scheduler */

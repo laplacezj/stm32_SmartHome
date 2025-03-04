@@ -3,6 +3,10 @@
 #include "driver_oled_font.h"
 #include "freertos.h"
 #include "task.h"
+#include "semphr.h"
+#include "my_print.h"
+
+SemaphoreHandle_t xOledMutex; 
 
 /*引脚配置*/
 //#define OLED_W_SCL(x)		GPIO_WriteBit(GPIOB, GPIO_Pin_8, (BitAction)(x))
@@ -144,7 +148,7 @@ void OLED_Clear(void)
 void OLED_ShowChar(uint8_t Line, uint8_t Column, char Char)
 {      	
 	uint8_t i;
-	taskENTER_CRITICAL();
+	xSemaphoreTake(xOledMutex, portMAX_DELAY);
 	OLED_SetCursor((Line - 1) * 2, (Column - 1) * 8);		//设置光标位置在上半部分
 	for (i = 0; i < 8; i++)
 	{
@@ -155,7 +159,7 @@ void OLED_ShowChar(uint8_t Line, uint8_t Column, char Char)
 	{
 		OLED_WriteData(OLED_F8x16[Char - ' '][i + 8]);		//显示下半部分内容
 	}
-	taskEXIT_CRITICAL();
+	xSemaphoreGive(xOledMutex);
 }
 
 /**
@@ -330,6 +334,13 @@ void OLED_Init(void)
 	OLED_WriteCommand(0xAF);	//开启显示
 		
 	OLED_Clear();				//OLED清屏
+
+	xOledMutex = xSemaphoreCreateMutex(); 
+	if (xOledMutex == NULL)
+	{
+		myPrint("OLED_Init: xOledMutex create failed! \n");
+	}
+	
 }
 
 

@@ -29,6 +29,8 @@
 #include "driver_oled.h"
 #include "driver_timer.h"
 #include "driver_dht11.h"
+#include "driver_esp8266.h"
+#include "my_print.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -79,6 +81,7 @@ void MX_FREERTOS_Init(void) {
 	TaskHandle_t xLedTaskHandle;
 	TaskHandle_t xOledTaskHandle;
 	TaskHandle_t xDht11TaskHandle;
+	TaskHandle_t xTcpTxTaskHandle;
 	OLED_Init();
 	OLED_Clear();
   /* USER CODE END Init */
@@ -105,9 +108,9 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
-	xReturn = xTaskCreate(Led_Test, "LedTask", 128, NULL, 1, &xLedTaskHandle);
-	xReturn = xTaskCreate(OLED_Test, "OledTask", 128, NULL, 1, &xOledTaskHandle);
-	xReturn = xTaskCreate(DHT11_Test, "Dht11Task", 128, NULL, 1, &xDht11TaskHandle);
+	//xReturn = xTaskCreate(Led_Test, "LedTask", 128, NULL, osPriorityNormal, &xLedTaskHandle);
+	//xReturn = xTaskCreate(OLED_Test, "OledTask", 128, NULL, osPriorityLow, &xOledTaskHandle);
+	xReturn = xTaskCreate(DHT11_Test, "Dht11Task", 128, NULL, osPriorityLow, &xDht11TaskHandle);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
